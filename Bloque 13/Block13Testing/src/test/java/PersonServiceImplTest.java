@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class PersonServiceImplTest {
 
     @InjectMocks
-    private PersonServiceImpl personService;
+    private PersonServiceImpl personServiceIMpl;
 
     @Mock
     private PersonRepository personRepository;
@@ -49,7 +49,7 @@ public class PersonServiceImplTest {
         when(personRepository.findById(validId)).thenReturn(Optional.of(person));
 
         // Ejecutar el método a probar
-        assertDoesNotThrow(() -> personService.deletePersonId(validId));
+        assertDoesNotThrow(() -> personServiceIMpl.deletePersonId(validId));
 
         // Verificar que el método del repositorio se haya llamado
         verify(personRepository, times(1)).deleteById(validId);
@@ -67,7 +67,7 @@ public class PersonServiceImplTest {
         when(personRepository.findAll(pageRequest)).thenReturn(new PageImpl<>(personList));
 
         // Esta linea ejecuta el método a probar
-        List<PersonOutputDto> result = personService.getAllPersons(pageNumber, pageSize, "simple");
+        List<PersonOutputDto> result = personServiceIMpl.getAllPersons(pageNumber, pageSize, "simple");
 
         // A continuación vamos a verificar el resultado
         assertNotNull(result);
@@ -90,7 +90,7 @@ public class PersonServiceImplTest {
         savedPerson.setIdPersona(1); // Asignar un ID válido
         when(personRepository.save(any())).thenReturn(savedPerson);
 
-        PersonOutputDto result = personService.addPerson(inputDto);
+        PersonOutputDto result = personServiceIMpl.addPerson(inputDto);
 
         assertNotNull(result);
         //assertEquals("newUser", result.getUsuario());
@@ -114,7 +114,7 @@ public class PersonServiceImplTest {
         when(personRepository.findById(1)).thenReturn(Optional.of(person));
 
         // Llamar al método de servicio para obtener la persona por ID
-        PersonOutputDto result = personService.getPerson(1);
+        PersonOutputDto result = personServiceIMpl.getPerson(1);
 
         // Verificar que el resultado no sea nulo y que los valores coincidan
         assertNotNull(result);
