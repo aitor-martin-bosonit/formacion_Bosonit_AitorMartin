@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2023-07-18T08:55:47.592735400Z</date>
+  <millis>1689670547592</millis>
+  <nanos>735400</nanos>
+  <sequence>3</sequence>
+  <logger>com.formacion.block5logging.Main</logger>
+  <level>SEVERE</level>
+  <class>com.formacion.block5logging.Main</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>Este es un mensaje de error</message>
+</record>
+<record>
+  <date>2023-07-18T08:55:47.600679800Z</date>
+  <millis>1689670547600</millis>
+  <nanos>679800</nanos>
+  <sequence>4</sequence>
+  <logger>com.formacion.block5logging.Main</logger>
+  <level>WARNING</level>
+  <class>com.formacion.block5logging.Main</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>Este es un mensaje de advertencia</message>
+</record>
+<record>
+  <date>2023-07-18T08:55:47.601677200Z</date>
+  <millis>1689670547601</millis>
+  <nanos>677200</nanos>
+  <sequence>5</sequence>
+  <logger>com.formacion.block5logging.Main</logger>
+  <level>INFO</level>
+  <class>com.formacion.block5logging.Main</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>Este es un mensaje de información</message>
+</record>
+</log>
