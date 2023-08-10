@@ -16,7 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import repository.PersonRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -157,5 +160,41 @@ public class PersonServiceImplTest {
 
         verifyNoMoreInteractions(personRepository);
     }
+
+    @Test
+    public void testAddPerson_Success() {
+        // Mock data
+        PersonInputDto inputDto = new PersonInputDto();
+        inputDto.setUsuario("user123");
+        inputDto.setPassword("password");
+        inputDto.setName("John");
+        inputDto.setCompanyEmail("john@example.com");
+        inputDto.setPersonalEmail("john.personal@example.com");
+        inputDto.setCity("New York");
+        inputDto.setActive(true);
+        inputDto.setCreatedDate(new Date());
+
+        Person savedPerson = new Person(inputDto);
+        savedPerson.setIdPersona(1);
+
+        when(personRepository.save(any())).thenReturn(savedPerson);
+
+        // Test
+        PersonOutputDto result = personService.addPerson(inputDto);
+
+        // Assertions
+        assertNotNull(result);
+        assertEquals(savedPerson.getIdPersona(), result.getIdPersona());
+        assertEquals(inputDto.getUsuario(), result.getUsuario());
+        assertEquals(inputDto.getPassword(), result.getPassword());
+        assertEquals(inputDto.getName(), result.getName());
+        // Add more assertions for other fields
+
+        // Verify repository interactions
+        verify(personRepository, times(1)).save(any(Person.class));
+        verifyNoMoreInteractions(personRepository);
+    }
+
+
 
 }

@@ -5,7 +5,6 @@ import controller.dto.PersonOutputDto;
 import entity.Person;
 import exceptions.UnprocessableEntityException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -106,7 +105,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonOutputDto updatePerson(Integer idPersona, PersonInputDto person) {
         Person persona = personRepository.findById(idPersona).orElseThrow(() -> new EntityNotFoundException("No se encontró la persona con ID: " + idPersona));
-        //persona.setUsuario(Objects.requireNonNullElse(person.getUsuario(), persona.getUsuario()));
+        persona.setUsuario(Objects.requireNonNullElse(person.getUsuario(), persona.getUsuario()));
         if (person.getUsuario() != null) {
             persona.setUsuario(person.getUsuario());
         }
