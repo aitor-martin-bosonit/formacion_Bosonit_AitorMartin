@@ -129,8 +129,33 @@ public class PersonServiceImplTest {
         verify(personRepository, times(1)).findById(1);
     }
 
+    @Test
+    public void testGetPersonsName_Success() {
 
+        String name = "John";
+        int pageNumber = 0;
+        int pageSize = 10;
+        List<Person> mockedPersons = new ArrayList<>();
+        mockedPersons.add(new Person());
+        mockedPersons.add(new Person());
+        when(personRepository.findByName(eq(name), any(PageRequest.class))).thenReturn(mockedPersons);
 
+        List<PersonOutputDto> result = personService.getPersonsName(pageNumber, pageSize, name, "output");
 
+        verify(personRepository, times(1)).findByName(eq(name), any(PageRequest.class));
+        assertEquals(2, result.size());
+
+        verify(personRepository, times(1)).findByName(eq(name), any(PageRequest.class));
+        assertEquals(2, result.size());
+
+        PersonOutputDto firstPerson = result.get(0);
+        PersonOutputDto secondPerson = result.get(1);
+        assertEquals(mockedPersons.get(0).getIdPersona(), firstPerson.getIdPersona());
+        assertEquals(mockedPersons.get(1).getName(), secondPerson.getName());
+
+        verify(personRepository, times(1)).findByName(eq(name), any(PageRequest.class));
+
+        verifyNoMoreInteractions(personRepository);
+    }
 
 }
