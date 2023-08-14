@@ -20,7 +20,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/login").permitAll()
                         .requestMatchers(HttpMethod.GET).hasAnyRole(ROLE_ADMIN, ROLE_USER)
-                        //.requestMatchers(HttpMethod.POST).hasRole(ROLE_ADMIN)
+                        .requestMatchers(HttpMethod.POST).hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/person").permitAll()
                         .requestMatchers(HttpMethod.PUT).hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.DELETE).hasRole(ROLE_ADMIN)
