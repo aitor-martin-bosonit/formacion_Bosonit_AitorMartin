@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ViajeServiceImpl {
+public class ViajeServiceImpl implements ViajeService {
 
     @Autowired
     ViajeRepository viajeRepository;
@@ -24,7 +24,7 @@ public class ViajeServiceImpl {
     @Autowired
     ClienteRepository clienteRepository;
 
-    private List<Cliente> getClientesFromIds(List<Integer> clientesIds) {
+    public List<Cliente> getClientesFromIds(List<Integer> clientesIds) {
         if (clientesIds == null) {
             return Collections.emptyList();
         }
@@ -35,6 +35,7 @@ public class ViajeServiceImpl {
     }
 
 
+    @Override
     public ViajeOutput addViaje(ViajeInput viajeInput) {
         if (viajeInput.getListaPasajeros().size() > 40) {
             throw new EntityNotFoundException("SOlo se pueden añadir 40 pasajeros");
@@ -52,6 +53,7 @@ public class ViajeServiceImpl {
     }
 
 
+    @Override
     public void deleteViaje(int id) {
         Viaje viaje = viajeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Viaje con ID: " + id + "NOT FOUND"));
@@ -63,6 +65,7 @@ public class ViajeServiceImpl {
     }
 
 
+    @Override
     public ViajeOutput updateViaje(Integer id, ViajeInput viajeInput) {
         Viaje viaje = viajeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Viaje con ID: " + id + "NOT FOUND"));
@@ -90,6 +93,7 @@ public class ViajeServiceImpl {
         return viajeRepository.save(viaje).viajeToViajeOutput();
     }
 
+
     private void updateViajePasajeros(Viaje viaje, List<Integer> pasajerosIds) {
         List<Cliente> clienteList = getClientesFromIds(pasajerosIds);
         viaje.getListaPasajeros().forEach(cliente -> {
@@ -104,6 +108,7 @@ public class ViajeServiceImpl {
     }
 
 
+    @Override
     public List<ViajeOutput> getAllViaje(int pageNumber, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         return viajeRepository.findAll(pageRequest).getContent()
@@ -113,6 +118,7 @@ public class ViajeServiceImpl {
     }
 
 
+    @Override
     public ViajeOutput getViaje(int id) {
         Viaje viaje = viajeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Viaje con ID: " + id + "NOT FOUND"));
@@ -120,6 +126,7 @@ public class ViajeServiceImpl {
     }
 
 
+    @Override
     public ViajeOutput addPasajero(Integer idViaje, Integer idPasajero) {
         Viaje viaje = viajeRepository.findById(idViaje)
                 .orElseThrow(() -> new EntityNotFoundException("Viaje con ID " + idViaje + "NOT FOUND"));
@@ -137,6 +144,7 @@ public class ViajeServiceImpl {
     }
 
 
+    @Override
     public ViajeOutput modifyEstado(Integer idViaje, String estado) {
         Viaje viaje = viajeRepository.findById(idViaje)
                 .orElseThrow(() -> new EntityNotFoundException("Viaje con ID " + idViaje + "NOT FOUND"));
@@ -145,6 +153,7 @@ public class ViajeServiceImpl {
     }
 
 
+    @Override
     public String verifyViaje(Integer idViaje) {
         Viaje viaje = viajeRepository.findById(idViaje)
                 .orElseThrow(() -> new EntityNotFoundException("Viaje con ID " + idViaje + "NOT FOUND"));
