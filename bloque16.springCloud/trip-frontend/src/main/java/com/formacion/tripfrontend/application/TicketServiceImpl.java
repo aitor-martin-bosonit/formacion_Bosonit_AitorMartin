@@ -5,6 +5,7 @@ import com.formacion.tripfrontend.controller.dtos.output.TicketOutput;
 import com.formacion.tripfrontend.domain.Cliente;
 import com.formacion.tripfrontend.domain.Ticket;
 import com.formacion.tripfrontend.domain.Viaje;
+import com.formacion.tripfrontend.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
