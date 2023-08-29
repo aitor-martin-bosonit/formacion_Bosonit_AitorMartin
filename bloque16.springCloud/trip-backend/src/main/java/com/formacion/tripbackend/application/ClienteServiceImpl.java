@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ClienteServiceImpl {
+public class ClienteServiceImpl implements ClienteService {
 
         @Autowired
         ClienteRepository clienteRepository;
@@ -23,7 +23,7 @@ public class ClienteServiceImpl {
         @Autowired
         ViajeRepository viajeRepository;
 
-        private List<Viaje> getViajesFromIds(List<Integer> viajesIds) {
+        public List<Viaje> getViajesFromIds(List<Integer> viajesIds) {
             if (viajesIds == null) {
                 return List.of(); // Lista vacía
             }
@@ -34,6 +34,7 @@ public class ClienteServiceImpl {
         }
 
 
+        @Override
         public ClienteOutput addCliente(ClienteInput clienteInput) {
             List<Viaje> viajeList = getViajesFromIds(clienteInput.getListaViajes());
             Cliente cliente = new Cliente(clienteInput);
@@ -47,6 +48,7 @@ public class ClienteServiceImpl {
         }
 
 
+        @Override
         public void deleteCliente(int id) {
             Cliente cliente = clienteRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Cliente con ID " + id + "NOT FOUND"));
@@ -58,6 +60,7 @@ public class ClienteServiceImpl {
         }
 
 
+        @Override
         public ClienteOutput updateCliente(Integer id, ClienteInput clienteInput) {
             Cliente cliente = clienteRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Cliente con ID " + id + "NOT FOUND"));
@@ -69,6 +72,7 @@ public class ClienteServiceImpl {
 
             return clienteRepository.save(cliente).clienteToClienteOutput();
         }
+
 
         private void updateClienteViajes(Cliente cliente, List<Integer> viajesIds) {
             List<Viaje> viajeList = getViajesFromIds(viajesIds);
@@ -84,6 +88,7 @@ public class ClienteServiceImpl {
         }
 
 
+        @Override
         public List<ClienteOutput> getAllCliente(int pageNumber, int pageSize) {
             PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
             return clienteRepository.findAll(pageRequest).getContent()
@@ -92,6 +97,7 @@ public class ClienteServiceImpl {
         }
 
 
+        @Override
         public ClienteOutput getCliente(int id) {
             Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente con ID " + id + "NOT FOUND"));
             return cliente.clienteToClienteOutput();
@@ -99,6 +105,7 @@ public class ClienteServiceImpl {
 
 
 
+        @Override
         public int countPasajeros(int idViaje) {
             Viaje viaje = viajeRepository.findById(idViaje).orElseThrow(() -> new EntityNotFoundException("Viaje con Id " + idViaje + "NOT FOUND"));
             return viaje.getListaPasajeros().size();
