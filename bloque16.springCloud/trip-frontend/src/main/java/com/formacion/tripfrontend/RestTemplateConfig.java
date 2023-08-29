@@ -13,3 +13,5 @@ public class RestTemplateConfig {
     }
 
 }
+
+//Agregamos la etiqueta @configuration
