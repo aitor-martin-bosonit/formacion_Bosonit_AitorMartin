@@ -1,0 +1,27 @@
+{
+	"info": {
+		"_postman_id": "faf4f373-165d-4ef4-a543-a1eabc0a01ab",
+		"name": "Block16 SpringCloud",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28457072"
+	},
+               {
+					"name": "Generar Ticket Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/tickets/generateTicket/1/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"tickets",
+								"generateTicket",
+								"1",
+								"1"
+							]
+						}
+					},
