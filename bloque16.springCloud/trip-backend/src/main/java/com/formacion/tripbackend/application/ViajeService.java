@@ -2,9 +2,11 @@ package com.formacion.tripbackend.application;
 
 import com.formacion.tripbackend.controller.dtos.input.ViajeInput;
 import com.formacion.tripbackend.controller.dtos.output.ViajeOutput;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface ViajeService {
 
     ViajeOutput addViaje(ViajeInput viajeInput);
