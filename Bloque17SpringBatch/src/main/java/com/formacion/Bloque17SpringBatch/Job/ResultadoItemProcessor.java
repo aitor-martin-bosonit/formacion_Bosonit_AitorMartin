@@ -1,0 +1,24 @@
+package com.formacion.Bloque17SpringBatch.Job;
+
+import com.formacion.Bloque17SpringBatch.Domain.Resultado;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class ResultadoItemProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(ResultadoItemProcessor.class);
+
+    @Override
+    public Resultado process(Resultado resultadoInput) throws Exception {
+        log.info("Calculando el riesgo según la temperatura media");
+        if(resultadoInput.getTemperaturaMedia() > 36) {
+            resultadoInput.setRiesgo("Alto");
+        } else if (resultadoInput.getTemperaturaMedia() >= 32 && resultadoInput.getTemperaturaMedia() <= 36) {
+            resultadoInput.setRiesgo("Medio");
+        } else if (resultadoInput.getTemperaturaMedia() < 32) {
+            resultadoInput.setRiesgo("Bajo");
+        }
+        return resultadoInput;
+    }
+
+}
