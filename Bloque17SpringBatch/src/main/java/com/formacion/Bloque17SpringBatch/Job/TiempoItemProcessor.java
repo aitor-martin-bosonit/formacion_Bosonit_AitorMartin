@@ -3,8 +3,9 @@ package com.formacion.Bloque17SpringBatch.Job;
 import com.formacion.Bloque17SpringBatch.Domain.Tiempo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.item.ItemProcessor;
 
-public class TiempoItemProcessor {
+public class TiempoItemProcessor implements ItemProcessor<Tiempo, Tiempo> {
 
     private static final Logger log = LoggerFactory.getLogger(TiempoItemProcessor.class);
 

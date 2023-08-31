@@ -9,8 +9,7 @@ import com.formacion.Bloque17SpringBatch.Job.TiempoItemProcessor;
 import com.formacion.Bloque17SpringBatch.Job.TiempoRiesgoItemProcessor;
 import com.formacion.Bloque17SpringBatch.Listener.JobListener;
 import com.formacion.Bloque17SpringBatch.Mappers.ResultadoRowMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.formacion.Bloque17SpringBatch.Mappers.TiempoRowMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -35,20 +34,25 @@ import javax.sql.DataSource;
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
-    private static final Logger log = LoggerFactory.getLogger(BatchConfiguration.class);
+
+    private static final int CHUNK_SIZE = 10;
 
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
+
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
+
     @Autowired
     DataSource dataSource;
+
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    private int ultimaFila = 0;
+
     @Bean
     public FlatFileItemReader<Tiempo> tiempoReader() {
-        log.info("--> Iniciando lectura de registros desde el archivo sample-data.csv");
         return new FlatFileItemReaderBuilder<Tiempo>()
                 .name("tiempoReader")
                 .resource(new ClassPathResource("sample-data.csv"))
@@ -64,6 +68,7 @@ public class BatchConfiguration {
     public ComprobacionesItemProcessor comprobacionesItemProcessor() {
         return new ComprobacionesItemProcessor();
     }
+
     @Bean
     public TiempoItemProcessor tiempoProcessor() {
         return new TiempoItemProcessor();
@@ -71,8 +76,6 @@ public class BatchConfiguration {
 
     @Bean
     public JdbcBatchItemWriter<Tiempo> tiempoWriter(DataSource dataSource) {
-        log.info("--> Insertando los datos de sample-data.csv en la base de datos");
-        ultimaFila = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM tiempo", Integer.class);
         return new JdbcBatchItemWriterBuilder<Tiempo>()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
                 .sql("INSERT INTO tiempo (fecha, localidad, temperatura) VALUES (:fecha, :localidad, :temperatura)")
@@ -83,7 +86,7 @@ public class BatchConfiguration {
     @Bean
     public Step comprobacionesStep(JdbcBatchItemWriter<Tiempo> writer) {
         return stepBuilderFactory.get("comprobacionesStep")
-                .<Tiempo, Tiempo> chunk(10)
+                .<Tiempo, Tiempo> chunk(CHUNK_SIZE)
                 .reader(tiempoReader())
                 .processor(comprobacionesItemProcessor())
                 .writer(writer)
@@ -93,7 +96,7 @@ public class BatchConfiguration {
     @Bean
     public Step tiempoStep1(JdbcBatchItemWriter<Tiempo> writer) {
         return stepBuilderFactory.get("tiempoStep1")
-                .<Tiempo, Tiempo> chunk(10)
+                .<Tiempo, Tiempo> chunk(CHUNK_SIZE)
                 .reader(tiempoReader())
                 .processor(tiempoProcessor())
                 .writer(writer)
@@ -102,12 +105,12 @@ public class BatchConfiguration {
 
     @Bean
     public JdbcCursorItemReader<Tiempo> tiempoReaderDataBase(){
-        return stepBuilderFactory.get("tiempoStep1")
-                .<Tiempo, Tiempo> chunk(10)
-                .reader(tiempoReader())
-                .processor(tiempoProcessor())
-                .writer(writer)
-                .build();
+        JdbcCursorItemReader<Tiempo> reader = new JdbcCursorItemReader<>();
+        reader.setSql("SELECT t.* FROM tiempo t WHERE t.id_tiempo > " + ultimaFila);
+        reader.setDataSource(dataSource);
+        reader.setFetchSize(100);
+        reader.setRowMapper(new TiempoRowMapper());
+        return reader;
     }
 
     @Bean
@@ -117,8 +120,6 @@ public class BatchConfiguration {
 
     @Bean
     public JdbcBatchItemWriter<TiempoRiesgo> tiempoRiesgoWriter(DataSource dataSource) {
-        log.info("--> Insertando los datos de tiempo en la tabla tiempo-riesgo");
-
         return new JdbcBatchItemWriterBuilder<TiempoRiesgo>()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
                 .sql("INSERT INTO tiempo_riesgo (fecha_prediccion, riesgo, id_tiempo) VALUES (:fechaPrediccion, :riesgo, :tiempo.idTiempo)")
@@ -129,7 +130,7 @@ public class BatchConfiguration {
     @Bean
     public Step tiempoRiesgoStep1(JdbcBatchItemWriter<TiempoRiesgo> writer) {
         return stepBuilderFactory.get("tiempoRiesgoStep1")
-                .<Tiempo, TiempoRiesgo> chunk(10)
+                .<Tiempo, TiempoRiesgo> chunk(CHUNK_SIZE)
                 .reader(tiempoReaderDataBase())
                 .processor(tiempoRiesgoProcessor())
                 .writer(writer)
@@ -138,7 +139,6 @@ public class BatchConfiguration {
 
     @Bean
     public JdbcCursorItemReader<Resultado> agrupandoDatos(){
-        log.info("--> Agrupando los datos de la BD");
         jdbcTemplate.update("DELETE FROM Resultado");
         jdbcTemplate.update("ALTER TABLE Resultado ALTER COLUMN id_resultado RESTART WITH 1");
         JdbcCursorItemReader<Resultado> reader = new JdbcCursorItemReader<>();
@@ -159,7 +159,6 @@ public class BatchConfiguration {
 
     @Bean
     public JdbcBatchItemWriter<Resultado> resultadoWriter(DataSource dataSource) {
-        log.info("--> Añadiendo los resultados!!");
         return new JdbcBatchItemWriterBuilder<Resultado>()
                 .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
                 .sql("INSERT INTO resultado (anio,localidad,mes,numero_mediciones,riesgo,temperatura_media) VALUES (:anio, :localidad, :mes, :numeroMediciones, :riesgo, :temperaturaMedia)")
@@ -170,7 +169,7 @@ public class BatchConfiguration {
     @Bean
     public Step resultadoStep1(JdbcBatchItemWriter<Resultado> writer) {
         return stepBuilderFactory.get("resultadoStep1")
-                .<Resultado, Resultado> chunk(10)
+                .<Resultado, Resultado> chunk(CHUNK_SIZE)
                 .reader(agrupandoDatos())
                 .processor(resultadoProcessor())
                 .writer(writer)
