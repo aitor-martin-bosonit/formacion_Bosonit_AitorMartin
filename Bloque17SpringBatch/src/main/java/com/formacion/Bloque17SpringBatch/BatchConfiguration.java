@@ -1,4 +1,4 @@
-package com.formacion.Bloque17SpringBatch.Config;
+package com.formacion.Bloque17SpringBatch;
 
 import com.formacion.Bloque17SpringBatch.Domain.Resultado;
 import com.formacion.Bloque17SpringBatch.Domain.Tiempo;
@@ -10,6 +10,7 @@ import com.formacion.Bloque17SpringBatch.Job.TiempoRiesgoItemProcessor;
 import com.formacion.Bloque17SpringBatch.Listener.JobListener;
 import com.formacion.Bloque17SpringBatch.Mappers.ResultadoRowMapper;
 import com.formacion.Bloque17SpringBatch.Mappers.TiempoRowMapper;
+import lombok.Data;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -21,8 +22,9 @@ import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +33,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
-@Configuration
+
 @EnableBatchProcessing
+@Configuration
+@Data
 public class BatchConfiguration {
 
-    private static final int CHUNK_SIZE = 10;
+
 
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
@@ -53,15 +57,18 @@ public class BatchConfiguration {
 
     @Bean
     public FlatFileItemReader<Tiempo> tiempoReader() {
-        return new FlatFileItemReaderBuilder<Tiempo>()
-                .name("tiempoReader")
-                .resource(new ClassPathResource("sample-data.csv"))
-                .delimited()
-                .names(new String[]{"localidad", "fecha", "temperatura"})
-                .fieldSetMapper(new BeanWrapperFieldSetMapper<Tiempo>() {{
-                    setTargetType(Tiempo.class);
-                }})
-                .build();
+        FlatFileItemReader<Tiempo> reader = new FlatFileItemReader<>();
+        reader.setName("tiempoReader");
+        reader.setResource(new ClassPathResource("sample-data.csv"));
+        reader.setLineMapper(new DefaultLineMapper<Tiempo>() {{
+            setLineTokenizer(new DelimitedLineTokenizer() {{
+                setNames(new String[]{"localidad", "fecha", "temperatura"});
+            }});
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<Tiempo>() {{
+                setTargetType(Tiempo.class);
+            }});
+        }});
+        return reader;
     }
 
     @Bean
@@ -76,17 +83,17 @@ public class BatchConfiguration {
 
     @Bean
     public JdbcBatchItemWriter<Tiempo> tiempoWriter(DataSource dataSource) {
-        return new JdbcBatchItemWriterBuilder<Tiempo>()
-                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .sql("INSERT INTO tiempo (fecha, localidad, temperatura) VALUES (:fecha, :localidad, :temperatura)")
-                .dataSource(dataSource)
-                .build();
+        JdbcBatchItemWriter<Tiempo> writer = new JdbcBatchItemWriter<>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
+        writer.setSql("INSERT INTO tiempo (fecha, localidad, temperatura) VALUES (:fecha, :localidad, :temperatura)");
+        writer.setDataSource(dataSource);
+        return writer;
     }
 
     @Bean
     public Step comprobacionesStep(JdbcBatchItemWriter<Tiempo> writer) {
         return stepBuilderFactory.get("comprobacionesStep")
-                .<Tiempo, Tiempo> chunk(CHUNK_SIZE)
+                .<Tiempo, Tiempo> chunk(10)
                 .reader(tiempoReader())
                 .processor(comprobacionesItemProcessor())
                 .writer(writer)
@@ -96,7 +103,7 @@ public class BatchConfiguration {
     @Bean
     public Step tiempoStep1(JdbcBatchItemWriter<Tiempo> writer) {
         return stepBuilderFactory.get("tiempoStep1")
-                .<Tiempo, Tiempo> chunk(CHUNK_SIZE)
+                .<Tiempo, Tiempo> chunk(10)
                 .reader(tiempoReader())
                 .processor(tiempoProcessor())
                 .writer(writer)
@@ -130,7 +137,7 @@ public class BatchConfiguration {
     @Bean
     public Step tiempoRiesgoStep1(JdbcBatchItemWriter<TiempoRiesgo> writer) {
         return stepBuilderFactory.get("tiempoRiesgoStep1")
-                .<Tiempo, TiempoRiesgo> chunk(CHUNK_SIZE)
+                .<Tiempo, TiempoRiesgo> chunk(10)
                 .reader(tiempoReaderDataBase())
                 .processor(tiempoRiesgoProcessor())
                 .writer(writer)
@@ -169,7 +176,7 @@ public class BatchConfiguration {
     @Bean
     public Step resultadoStep1(JdbcBatchItemWriter<Resultado> writer) {
         return stepBuilderFactory.get("resultadoStep1")
-                .<Resultado, Resultado> chunk(CHUNK_SIZE)
+                .<Resultado, Resultado> chunk(10)
                 .reader(agrupandoDatos())
                 .processor(resultadoProcessor())
                 .writer(writer)
