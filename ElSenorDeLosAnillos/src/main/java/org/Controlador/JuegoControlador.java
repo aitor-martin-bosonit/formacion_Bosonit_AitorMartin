@@ -6,14 +6,12 @@ import Modelo.clases.Bestia;
 import Modelo.clases.Heroe;
 import Vista.VistaJuego;
 
-import java.util.Scanner;
 
 public class JuegoControlador {
     private Ejercito ejercitoHeroes;
     private Ejercito ejercitoBestias;
     private VistaJuego vista;
 
-    private Scanner scanner = new Scanner(System.in);
 
     public JuegoControlador(Ejercito ejercitoHeroes, Ejercito ejercitoBestias, VistaJuego vista) {
         this.ejercitoHeroes = ejercitoHeroes;
@@ -22,7 +20,7 @@ public class JuegoControlador {
     }
 
     public void jugar() {
-        int numeroTurno = 1;
+
         int opcion;
 
         do {
