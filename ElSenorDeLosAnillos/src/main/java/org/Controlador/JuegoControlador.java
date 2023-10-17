@@ -6,7 +6,6 @@ import Modelo.clases.Bestia;
 import Modelo.clases.Heroe;
 import Vista.VistaJuego;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class JuegoControlador {
@@ -25,45 +24,6 @@ public class JuegoControlador {
     public void jugar() {
         int numeroTurno = 1;
         int opcion;
-     /*   while (ejercitoHeroes.estaVivo() && ejercitoBestias.estaVivo()) {
-            vista.imprimirTurno(numeroTurno);
-            List<Personaje> heroes = ejercitoHeroes.getPersonajes();
-            List<Personaje> bestias = ejercitoBestias.getPersonajes();
-
-            for (int i = 0; i < Math.min(heroes.size(), bestias.size()); i++) {
-                Personaje heroe = heroes.get(i);
-                Personaje bestia = bestias.get(i);
-                vista.imprimirLucha(heroe, bestia);
-
-                heroe.atacar(bestia);
-                bestia.atacar(heroe);
-
-                vista.imprimirResultadoLucha(heroe, bestia, heroe.getAtaque());
-                vista.imprimirResultadoLucha(bestia, heroe, bestia.getAtaque());
-
-                if (heroe.getVida() < 1) {
-                    ejercitoHeroes.eliminarPersonaje(heroe);
-                    vista.imprimirMuertePersonaje(heroe);
-                }
-
-                if (bestia.getVida() < 1) {
-                    ejercitoBestias.eliminarPersonaje(bestia);
-                    vista.imprimirMuertePersonaje(bestia);
-                }
-
-            }
-
-            numeroTurno++;
-        }
-
-        if (ejercitoHeroes.estaVivo()) {
-            vista.imprimirVictoriaHeroes();
-        } else {
-            vista.imprimirVictoriaBestias();
-        }*/
-//******************** LOGICA MENÚ *************************************
-
-
 
         do {
             opcion = vista.mostrarMenu();
@@ -90,148 +50,139 @@ public class JuegoControlador {
                     elegirCombate();
                     break;
                 case 8:
-                    System.out.println("Saliendo del programa...");
+                    vista.imprimirMensaje("Saliendo del programa...");
                     break;
                 default:
-                    System.out.println("Opción no válida. Por favor, elija una opción válida.");
+                    vista.imprimirMensaje("Opción no válida. Por favor, elija una opción válida.");
                     break;
             }
         } while (opcion != 8);
-
-//********************** CREATE, UPDATE, DELETE ******************************
-
     }
 
     private void crearHeroe() {
-        System.out.print("Nombre del Héroe: ");
-        String nombre = scanner.next();
-        System.out.print("Vida del Héroe: ");
-        int vida = scanner.nextInt();
-        System.out.print("Armadura del Héroe: ");
-        int armadura = scanner.nextInt();
+        String nombre = vista.obtenerNombre();
+        int vida = vista.obtenerVida();
+        int armadura = vista.obtenerArmadura();
+        String raza = vista.obtenerRazaHeroe();
 
-        Heroe nuevoHeroe = new Heroe(nombre, vida, armadura);
+        Heroe nuevoHeroe = new Heroe(nombre, vida, armadura, raza);
         ejercitoHeroes.crearPersonaje(nuevoHeroe);
-        System.out.println("Héroe creado con éxito.");
+        vista.imprimirMensaje("Héroe creado con éxito.");
     }
 
     private void crearBestia() {
-        System.out.print("Nombre de la Bestia: ");
-        String nombre = scanner.next();
-        System.out.print("Vida de la Bestia: ");
-        int vida = scanner.nextInt();
-        System.out.print("Armadura de la Bestia: ");
-        int armadura = scanner.nextInt();
+        String nombre = vista.obtenerNombre();
+        int vida = vista.obtenerVida();
+        int armadura = vista.obtenerArmadura();
+        String raza = vista.obtenerRazaBestia();
 
-        Bestia nuevaBestia = new Bestia(nombre, vida, armadura);
+        Bestia nuevaBestia = new Bestia(nombre, vida, armadura, raza);
         ejercitoBestias.crearPersonaje(nuevaBestia);
-        System.out.println("Bestia creada con éxito.");
+        vista.imprimirMensaje("Bestia creada con éxito.");
     }
 
     private void modificarHeroe() {
-        System.out.print("Nombre del Héroe a modificar: ");
-        String nombre = scanner.next();
+        listarPersonajes(ejercitoHeroes);
+        vista.imprimirMensaje("Modificar Héroe");
+        String nombre = vista.obtenerNombre();
         Personaje heroe = buscarPersonajePorNombre(nombre, ejercitoHeroes);
 
         if (heroe != null) {
-            System.out.print("Nuevo nombre del Héroe: ");
-            String nuevoNombre = scanner.next();
-            System.out.print("Nueva vida del Héroe: ");
-            int nuevaVida = scanner.nextInt();
-            System.out.print("Nueva armadura del Héroe: ");
-            int nuevaArmadura = scanner.nextInt();
+            String nuevoNombre = vista.obtenerNombre();
+            int nuevaVida = vista.obtenerVida();
+            int nuevaArmadura = vista.obtenerArmadura();
 
             ejercitoHeroes.modificarPersonaje(heroe, nuevoNombre, nuevaVida, nuevaArmadura);
-            System.out.println("Héroe modificado con éxito.");
+            vista.imprimirMensaje("Héroe modificado con éxito.");
         } else {
-            System.out.println("Héroe no encontrado.");
+            vista.imprimirMensaje("Héroe no encontrado.");
         }
     }
 
     private void modificarBestia() {
-        System.out.print("Nombre de la Bestia a modificar: ");
-        String nombre = scanner.next();
+        listarPersonajes(ejercitoBestias);
+        vista.imprimirMensaje("Modificar Bestia");
+        String nombre = vista.obtenerNombre();
         Personaje bestia = buscarPersonajePorNombre(nombre, ejercitoBestias);
 
         if (bestia != null) {
-            System.out.print("Nuevo nombre de la Bestia: ");
-            String nuevoNombre = scanner.next();
-            System.out.print("Nueva vida de la Bestia: ");
-            int nuevaVida = scanner.nextInt();
-            System.out.print("Nueva armadura de la Bestia: ");
-            int nuevaArmadura = scanner.nextInt();
+            String nuevoNombre = vista.obtenerNombre();
+            int nuevaVida = vista.obtenerVida();
+            int nuevaArmadura = vista.obtenerArmadura();
 
             ejercitoBestias.modificarPersonaje(bestia, nuevoNombre, nuevaVida, nuevaArmadura);
-            System.out.println("Bestia modificada con éxito.");
+            vista.imprimirMensaje("Bestia modificada con éxito.");
         } else {
-            System.out.println("Bestia no encontrada.");
+            vista.imprimirMensaje("Bestia no encontrada.");
         }
     }
 
     private void borrarHeroe() {
-        System.out.print("Nombre del Héroe a borrar: ");
-        String nombre = scanner.next();
+        listarPersonajes(ejercitoHeroes);
+        vista.imprimirMensaje("Borrar Héroe");
+        String nombre = vista.obtenerNombre();
         Personaje heroe = buscarPersonajePorNombre(nombre, ejercitoHeroes);
 
         if (heroe != null) {
             ejercitoHeroes.eliminarPersonaje(heroe);
-            System.out.println("Héroe borrado con éxito.");
+            vista.imprimirMensaje("Héroe borrado con éxito.");
         } else {
-            System.out.println("Héroe no encontrado.");
+            vista.imprimirMensaje("Héroe no encontrado.");
         }
     }
 
     private void borrarBestia() {
-        System.out.print("Nombre de la Bestia a borrar: ");
-        String nombre = scanner.next();
+        listarPersonajes(ejercitoBestias);
+        vista.imprimirMensaje("Borrar Bestia");
+        String nombre = vista.obtenerNombre();
         Personaje bestia = buscarPersonajePorNombre(nombre, ejercitoBestias);
 
         if (bestia != null) {
             ejercitoBestias.eliminarPersonaje(bestia);
-            System.out.println("Bestia borrada con éxito.");
+            vista.imprimirMensaje("Bestia borrada con éxito.");
         } else {
-            System.out.println("Bestia no encontrada.");
+            vista.imprimirMensaje("Bestia no encontrada.");
         }
     }
 
     private void elegirCombate() {
-        System.out.println("Elija un Héroe para la batalla:");
+        vista.imprimirMensaje("Elegir Combate");
+        vista.imprimirMensaje("Elija un Héroe para la batalla:");
         listarPersonajes(ejercitoHeroes);
 
-        System.out.print("Nombre del Héroe: ");
-        String nombreHeroe = scanner.next();
+        String nombreHeroe = vista.obtenerNombre();
         Personaje heroe = buscarPersonajePorNombre(nombreHeroe, ejercitoHeroes);
 
         if (heroe == null) {
-            System.out.println("Héroe no encontrado.");
+            vista.imprimirMensaje("Héroe no encontrado.");
             return;
         }
 
-        System.out.println("Elija una Bestia para la batalla:");
+        vista.imprimirMensaje("Elija una Bestia para la batalla:");
         listarPersonajes(ejercitoBestias);
 
-        System.out.print("Nombre de la Bestia: ");
-        String nombreBestia = scanner.next();
+        String nombreBestia = vista.obtenerNombre();
         Personaje bestia = buscarPersonajePorNombre(nombreBestia, ejercitoBestias);
 
         if (bestia == null) {
-            System.out.println("Bestia no encontrada.");
+            vista.imprimirMensaje("Bestia no encontrada.");
             return;
         }
-
 
         realizarBatalla(heroe, bestia);
     }
 
     private void listarPersonajes(Ejercito ejercito) {
-        System.out.println("Personajes disponibles:");
+        vista.imprimirMensaje("Personajes disponibles:");
         for (Personaje personaje : ejercito.getPersonajes()) {
-            System.out.println(personaje.getNombre());
+            vista.imprimirMensaje(personaje.getNombre());
         }
     }
 
     private void realizarBatalla(Personaje heroe, Personaje bestia) {
+        vista.imprimirMensaje("Realizar Batalla");
         vista.imprimirLucha(heroe, bestia);
+        vista.imprimirLucha(bestia, heroe);
 
         while (heroe.getVida() > 0 && bestia.getVida() > 0) {
             heroe.atacar(bestia);
@@ -240,23 +191,17 @@ public class JuegoControlador {
             vista.imprimirResultadoLucha(heroe, bestia, heroe.getAtaque());
             vista.imprimirResultadoLucha(bestia, heroe, bestia.getAtaque());
 
-            if (heroe.getVida() <= 0 && bestia.getVida() <= 0) {
-                System.out.println("¡Es un empate!");
-            } else if (heroe.getVida() <= 0) {
-                System.out.println("¡" + bestia.getNombre() + " ha ganado la batalla!");
+            if (heroe.getVida() <= 0) {
+                ejercitoHeroes.eliminarPersonaje(heroe);
+                vista.imprimirMuertePersonaje(heroe);
+                vista.imprimirMensaje(bestia.getNombre() + " ha ganado la batalla!");
+                return;
             } else if (bestia.getVida() <= 0) {
-                System.out.println("¡" + heroe.getNombre() + " ha ganado la batalla!");
+                ejercitoBestias.eliminarPersonaje(bestia);
+                vista.imprimirMuertePersonaje(bestia);
+                vista.imprimirMensaje(heroe.getNombre() + " ha ganado la batalla!");
+                return;
             }
-        }
-
-        if (heroe.getVida() <= 0) {
-            ejercitoHeroes.eliminarPersonaje(heroe);
-            vista.imprimirMuertePersonaje(heroe);
-        }
-
-        if (bestia.getVida() <= 0) {
-            ejercitoBestias.eliminarPersonaje(bestia);
-            vista.imprimirMuertePersonaje(bestia);
         }
     }
 

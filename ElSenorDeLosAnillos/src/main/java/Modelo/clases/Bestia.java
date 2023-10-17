@@ -1,15 +1,17 @@
 package Modelo.clases;
 
 import Modelo.Personaje;
-import Vista.VistaJuego;
 
 public class Bestia extends Personaje {
-    public Bestia(String nombre, int vida, int armadura) {
-        super(nombre, vida, armadura);
+    private String raza;
+    public Bestia(String nombre, int vida, int armadura, String raza) {
+
+        super(nombre, vida, armadura, raza);
+        this.raza = raza;
     }
 
 
-    public void atacar(Personaje objetivo) {
+    public int atacar(Personaje objetivo) {
         int valorAtaque = (int) (Math.random() * 91);
 
         if (valorAtaque > objetivo.getArmadura()) {
@@ -19,6 +21,7 @@ public class Bestia extends Personaje {
 
         }
 
+        return valorAtaque;
     }
 
 

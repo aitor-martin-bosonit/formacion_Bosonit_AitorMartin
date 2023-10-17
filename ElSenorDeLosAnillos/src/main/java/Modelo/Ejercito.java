@@ -18,19 +18,9 @@ public class Ejercito {
         return personajes;
     }
 
-    public boolean estaVivo() {
-        for (Personaje personaje : personajes) {
-            if (personaje.getVida() > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void crearPersonaje(Personaje personaje) {
         personajes.add(personaje);
     }
-
 
     public void modificarPersonaje(Personaje personaje, String nuevoNombre, int nuevaVida, int nuevaArmadura) {
         if (personajes.contains(personaje)) {
