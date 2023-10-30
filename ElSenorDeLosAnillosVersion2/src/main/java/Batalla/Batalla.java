@@ -44,14 +44,14 @@ public class Batalla {
                     System.out.println("Turno de " + heroe.getNombre());
                     heroe.atacar(bestia);
 
-                    System.out.println("Datos Actualizados de " + bestia);
+                    System.out.println("Puntos de vida restantes de " + bestia);
                     if (bestia.estaMuerto())
                         System.out.println(bestia.getNombre() + " ha muerto.");
                     else {
 
                         System.out.println("Turno de " + bestia.getNombre());
                         bestia.atacar(heroe);
-                        System.out.println("Datos Actualizados de " + heroe);
+                        System.out.println("Puntos de vida restantes de " + heroe);
                         if (heroe.estaMuerto())
                             System.out.println(heroe.getNombre() + " ha muerto.");
                     }
