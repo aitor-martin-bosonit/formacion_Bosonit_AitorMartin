@@ -199,54 +199,60 @@ public class Juego {
         if (opcionModificar == 1) {
             listarHeroes(heroes);
             System.out.print("Selecciona el número del Héroe que deseas modificar: ");
-            int numeroHeroe = scanner.nextInt();
-            scanner.nextLine();
-            Heroe heroe = (Heroe) heroes.getPersonaje(numeroHeroe - 1);
-            if (heroe != null) {
-
-                System.out.print("Nuevo nombre: ");
-                String nuevoNombre = scanner.nextLine();
-                try{
-                System.out.print("Nueva vida: ");
-                int nuevaVida = scanner.nextInt();
-                System.out.print("Nueva armadura: ");
-                int nuevaArmadura = scanner.nextInt();
+            try {
+                int numeroHeroe = scanner.nextInt();
                 scanner.nextLine();
-
-                heroe.modificarPersonaje(nuevoNombre, nuevaVida, nuevaArmadura);
-                System.out.println("Héroe modificado correctamente.");}
-                catch (InputMismatchException e) {
-                    scanner.next();
-                    System.out.println("Opción no válida. Ingrese un numero.");
-                    return;
+                Heroe heroe = (Heroe) heroes.getPersonaje(numeroHeroe - 1);
+                if (heroe != null) {
+                    System.out.print("Nuevo nombre: ");
+                    String nuevoNombre = scanner.nextLine();
+                    try {
+                        System.out.print("Nueva vida: ");
+                        int nuevaVida = scanner.nextInt();
+                        System.out.print("Nueva armadura: ");
+                        int nuevaArmadura = scanner.nextInt();
+                        scanner.nextLine();
+                        heroe.modificarPersonaje(nuevoNombre, nuevaVida, nuevaArmadura);
+                        System.out.println("Héroe modificado correctamente.");
+                    } catch (InputMismatchException e) {
+                        scanner.next();
+                        System.out.println("Entrada no válida. Ingresa un número.");
+                    }
+                } else {
+                    System.out.println("Héroe no encontrado.");
                 }
-            } else {
-                System.out.println("Héroe no encontrado.");
+            } catch (InputMismatchException e) {
+                scanner.next();
+                System.out.println("Entrada no válida. Debes ingresar un número.");
             }
         } else if (opcionModificar == 2) {
             listarBestias(bestias);
             System.out.print("Selecciona el número de la Bestia que deseas modificar: ");
-            int numeroBestia = scanner.nextInt();
-            scanner.nextLine();
-            Bestia bestia = (Bestia) bestias.getPersonaje(numeroBestia - 1);
-            if (bestia != null) {
-                System.out.print("Nuevo nombre: ");
-                String nuevoNombre = scanner.nextLine();
-                try{
-                System.out.print("Nueva vida: ");
-                int nuevaVida = scanner.nextInt();
-                System.out.print("Nueva armadura: ");
-                int nuevaArmadura = scanner.nextInt();
+            try {
+                int numeroBestia = scanner.nextInt();
                 scanner.nextLine();
-                bestia.modificarPersonaje(nuevoNombre, nuevaVida, nuevaArmadura);
-                System.out.println("Bestia modificada correctamente.");}
-                catch (InputMismatchException e) {
-                    scanner.next();
-                    System.out.println("Opción no válida. Ingrese un numero.");
-                    return;
+                Bestia bestia = (Bestia) bestias.getPersonaje(numeroBestia - 1);
+                if (bestia != null) {
+                    System.out.print("Nuevo nombre: ");
+                    String nuevoNombre = scanner.nextLine();
+                    try {
+                        System.out.print("Nueva vida: ");
+                        int nuevaVida = scanner.nextInt();
+                        System.out.print("Nueva armadura: ");
+                        int nuevaArmadura = scanner.nextInt();
+                        scanner.nextLine();
+                        bestia.modificarPersonaje(nuevoNombre, nuevaVida, nuevaArmadura);
+                        System.out.println("Bestia modificada correctamente.");
+                    } catch (InputMismatchException e) {
+                        scanner.next();
+                        System.out.println("Entrada no válida. Ingresa un número.");
+                    }
+                } else {
+                    System.out.println("Bestia no encontrada.");
                 }
-            } else {
-                System.out.println("Bestia no encontrada.");
+            } catch (InputMismatchException e) {
+                scanner.next();
+                System.out.println("Entrada no válida. Debes ingresar un número.");
             }
         } else {
             System.out.println("Opción no válida. Ingresa 1 para Héroe o 2 para Bestia.");
