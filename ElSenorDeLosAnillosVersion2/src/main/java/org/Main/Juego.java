@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Juego {
 
     public static void main (String args[]){
-
+        Scanner scanner = new Scanner(System.in);
         Ejercito heroes = new Ejercito();
         Ejercito bestias = new Ejercito();
 
@@ -28,7 +28,7 @@ public class Juego {
 //********************************************** MENU ***************************************************************
 
         boolean salir = false;
-        Scanner scanner = new Scanner(System.in);
+
 
         while (!salir) {
             System.out.println("Menú:");
@@ -39,14 +39,7 @@ public class Juego {
             System.out.println("5. Salir del Programa");
             System.out.print("Elige una opción: ");
 
-            int opcion;
-            try {
-                opcion = scanner.nextInt();
-            } catch (InputMismatchException e) {
-                scanner.next();
-                System.out.println("Opción no válida. Ingresa un número del 1 al 5.");
-                continue;
-            }
+            int opcion = obtenerEntero(scanner);
 
             switch (opcion) {
                 case 1:
@@ -74,6 +67,18 @@ public class Juego {
         scanner.close();
     }
 
+    private static int obtenerEntero(Scanner scanner) {
+        while (true) {
+            try {
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                scanner.nextLine();
+                System.out.println("Opción no válida. Ingresa un número del 1 al 5.");
+                System.out.print("Elige una opción: ");
+            }
+        }
+    }
+
     private static void submenuCrearPersonaje(Ejercito heroes, Ejercito bestias, Scanner scanner) {
         System.out.println("Crear Personaje:");
         System.out.println("1. Héroe");
@@ -96,12 +101,23 @@ public class Juego {
 
         System.out.print("Nombre: ");
         nombre = scanner.nextLine();
-
+        try{
         System.out.print("Vida: ");
-        vida = scanner.nextInt();
+        vida = scanner.nextInt();}
+        catch (InputMismatchException e) {
+            scanner.next();
+            System.out.println("Opción no válida. Ingrese un numero.");
+            return;
+        }
 
+        try{
         System.out.print("Armadura: ");
-        armadura = scanner.nextInt();
+        armadura = scanner.nextInt();}
+        catch (InputMismatchException e) {
+            scanner.next();
+            System.out.println("Opción no válida. Ingrese un numero.");
+            return;
+        }
 
         if (opcionCrear == 1) {
             submenuCrearHeroe(heroes, nombre, vida, armadura, scanner);
@@ -187,15 +203,23 @@ public class Juego {
             scanner.nextLine();
             Heroe heroe = (Heroe) heroes.getPersonaje(numeroHeroe - 1);
             if (heroe != null) {
+
                 System.out.print("Nuevo nombre: ");
                 String nuevoNombre = scanner.nextLine();
+                try{
                 System.out.print("Nueva vida: ");
                 int nuevaVida = scanner.nextInt();
                 System.out.print("Nueva armadura: ");
                 int nuevaArmadura = scanner.nextInt();
                 scanner.nextLine();
+
                 heroe.modificarPersonaje(nuevoNombre, nuevaVida, nuevaArmadura);
-                System.out.println("Héroe modificado correctamente.");
+                System.out.println("Héroe modificado correctamente.");}
+                catch (InputMismatchException e) {
+                    scanner.next();
+                    System.out.println("Opción no válida. Ingrese un numero.");
+                    return;
+                }
             } else {
                 System.out.println("Héroe no encontrado.");
             }
@@ -208,13 +232,19 @@ public class Juego {
             if (bestia != null) {
                 System.out.print("Nuevo nombre: ");
                 String nuevoNombre = scanner.nextLine();
+                try{
                 System.out.print("Nueva vida: ");
                 int nuevaVida = scanner.nextInt();
                 System.out.print("Nueva armadura: ");
                 int nuevaArmadura = scanner.nextInt();
                 scanner.nextLine();
                 bestia.modificarPersonaje(nuevoNombre, nuevaVida, nuevaArmadura);
-                System.out.println("Bestia modificada correctamente.");
+                System.out.println("Bestia modificada correctamente.");}
+                catch (InputMismatchException e) {
+                    scanner.next();
+                    System.out.println("Opción no válida. Ingrese un numero.");
+                    return;
+                }
             } else {
                 System.out.println("Bestia no encontrada.");
             }
@@ -260,25 +290,35 @@ public class Juego {
 
         if (opcionBorrar == 1) {
             listarHeroes(heroes);
-            System.out.print("Selecciona el número del Héroe que deseas borrar: ");
-            int numeroHeroe = scanner.nextInt();
-            Heroe heroe = (Heroe) heroes.getPersonaje(numeroHeroe - 1);
-            if (heroe != null) {
-                heroes.personajes.remove(heroe);
-                System.out.println("Héroe eliminado.");
-            } else {
-                System.out.println("Héroe no encontrado.");
+            try {
+                System.out.print("Selecciona el número del Héroe que deseas borrar: ");
+                int numeroHeroe = scanner.nextInt();
+                Heroe heroe = (Heroe) heroes.getPersonaje(numeroHeroe - 1);
+                if (heroe != null) {
+                    heroes.personajes.remove(heroe);
+                    System.out.println("Héroe eliminado.");
+                } else {
+                    System.out.println("Héroe no encontrado.");
+                }
+            } catch (InputMismatchException e) {
+                scanner.next();
+                System.out.println("Entrada no válida. Debes ingresar un número.");
             }
         } else if (opcionBorrar == 2) {
             listarBestias(bestias);
-            System.out.print("Selecciona el número de la Bestia que deseas borrar: ");
-            int numeroBestia = scanner.nextInt();
-            Bestia bestia = (Bestia) bestias.getPersonaje(numeroBestia - 1);
-            if (bestia != null) {
-                bestias.personajes.remove(bestia);
-                System.out.println("Bestia eliminada.");
-            } else {
-                System.out.println("Bestia no encontrada.");
+            try {
+                System.out.print("Selecciona el número de la Bestia que deseas borrar: ");
+                int numeroBestia = scanner.nextInt();
+                Bestia bestia = (Bestia) bestias.getPersonaje(numeroBestia - 1);
+                if (bestia != null) {
+                    bestias.personajes.remove(bestia);
+                    System.out.println("Bestia eliminada.");
+                } else {
+                    System.out.println("Bestia no encontrada.");
+                }
+            } catch (InputMismatchException e) {
+                scanner.next();
+                System.out.println("Entrada no válida. Debes ingresar un número.");
             }
         } else {
             System.out.println("Opción no válida. Ingresa 1 para Héroe o 2 para Bestia.");
