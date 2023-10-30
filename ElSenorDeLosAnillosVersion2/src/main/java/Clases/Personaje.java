@@ -24,6 +24,10 @@ public abstract class Personaje {
         return armadura;
     }
 
+    public int setArmadura(int nuevaArmadura) {
+        return armadura;
+    }
+
     public int getVida() {
         return vida;
     }
@@ -33,7 +37,7 @@ public abstract class Personaje {
             vida -= ataque - armadura;
 
         if (vida < 0)
-            vida = 0; //Evitamos valores negativos
+            vida = 0;
     }
 
     @Override

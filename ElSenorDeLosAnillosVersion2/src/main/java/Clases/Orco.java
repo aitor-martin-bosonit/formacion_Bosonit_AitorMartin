@@ -9,19 +9,11 @@ public class Orco extends Bestia {
 
     @Override
     public void atacar(Personaje enemigo) {
-        if (enemigo instanceof Heroe) {
-            Random dado = new Random();
-            int tirada = (int) (dado.nextInt(91) * 1.10);
-            System.out.println("Resultado del dado es: " + tirada);
-            System.out.println("El Orco reduce la armadura del Heroe en un 10%");
 
-            enemigo.recibirAtaque(tirada);
-        } else {
-
-            Random dado = new Random();
-            int tirada = dado.nextInt(91); // Dado normal
-            System.out.println("Resultado del dado es: " + tirada);
-            enemigo.recibirAtaque(tirada);
-        }
+        Random dado = new Random();
+        int tirada = dado.nextInt(91);
+        System.out.println("Resultado del dado es: " + tirada);
+        System.out.println("El Orco reduce la armadura del herore en un 10%");
+        enemigo.recibirAtaque(tirada);
     }
 }
