@@ -40,14 +40,15 @@ public class Batalla {
                 else {
 
                     System.out.println("Lucha entre " + heroe + " y " + bestia);
-                    //Turno heroe
+
                     System.out.println("Turno de " + heroe.getNombre());
                     heroe.atacar(bestia);
+
                     System.out.println("Datos Actualizados de " + bestia);
                     if (bestia.estaMuerto())
                         System.out.println(bestia.getNombre() + " ha muerto.");
                     else {
-                        //Turno bestia
+
                         System.out.println("Turno de " + bestia.getNombre());
                         bestia.atacar(heroe);
                         System.out.println("Datos Actualizados de " + heroe);
@@ -55,11 +56,11 @@ public class Batalla {
                             System.out.println(heroe.getNombre() + " ha muerto.");
                     }
                 }
-                //Turno batalla finalizado
+
                 heroes.comprobarEjercito();
                 bestias.comprobarEjercito();
                 pausa();
-                //se inicia el siguiente turno
+
             }
         }
 

@@ -17,6 +17,7 @@ public class Heroe extends Personaje {
         System.out.println("Primer dado: " + tirada1);
         System.out.println("Segundo dado: " + tirada2);
         int maximo =  Math.max(tirada1, tirada2);
+
         enemigo.recibirAtaque(maximo);
     }
 
