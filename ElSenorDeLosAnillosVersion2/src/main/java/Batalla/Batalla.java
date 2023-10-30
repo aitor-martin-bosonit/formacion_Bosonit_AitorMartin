@@ -1,8 +1,8 @@
-package Vista;
+package Batalla;
 
-import Modelo.Bestia;
-import Modelo.Ejercito;
-import Modelo.Heroe;
+import Clases.Bestia;
+import Clases.Ejercito;
+import Clases.Heroe;
 
 import java.util.Scanner;
 

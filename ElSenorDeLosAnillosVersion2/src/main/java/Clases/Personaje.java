@@ -1,4 +1,4 @@
-package Modelo;
+package Clases;
 
 public abstract class Personaje {
 
@@ -22,6 +22,10 @@ public abstract class Personaje {
 
     public int getArmadura() {
         return armadura;
+    }
+
+    public int getVida() {
+        return vida;
     }
 
     public void recibirAtaque(int ataque) {

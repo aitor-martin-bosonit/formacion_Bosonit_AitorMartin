@@ -1,8 +1,8 @@
 package org.Main;
 
-import Modelo.*;
-import Vista.Batalla;
-import java.util.ArrayList;
+import Clases.*;
+import Batalla.Batalla;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 

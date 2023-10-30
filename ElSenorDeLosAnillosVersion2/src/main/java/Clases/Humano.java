@@ -1,4 +1,4 @@
-package Modelo;
+package Clases;
 
 public class Humano extends Heroe {
     public Humano(String nombre, int vida, int armadura) {
